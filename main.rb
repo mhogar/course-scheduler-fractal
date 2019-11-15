@@ -42,8 +42,6 @@ table.search('tr').each do |tr|
         unless el.nil?
             data = el.values[2]
             case el.values[1]
-            when /WSS.COURSE.SECTIONS_/
-                section[:term] = data
             when /LIST.VAR1_/
                 section[:status] = data
             when /SEC.MEETING.INFO_/
@@ -52,6 +50,8 @@ table.search('tr').each do |tr|
                 section[:prof] = data
             when /LIST.VAR5_/
                 section[:capacity] = data
+            when /SEC.MIN.CRED_/
+                section[:credits] = data
             end
         else
             el = cell.at('a')
