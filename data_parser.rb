@@ -1,26 +1,64 @@
 require 'time'
 
-# t1 = Time.parse('05:30PM')
-# t2 = Time.parse('05:30PM')
-
-# puts t1
-# puts t2
-# puts (t1 == t2)
-
-test_data = {:status=>"Open", :name=>"CIS*2750*0101 (6778) Software System Dvlmt & Intgrn", 
-    :timeslots=>"2020/01/06-2020/04/20 LEC Mon, Wed 05:30PM - 06:50PM, ROZH, Room 102\n2020/01/06-2020/04/20 LAB Wed 08:30AM - 10:20AM, THRN, Room 2418", 
-    :prof=>"D. Nikitenko", :capacity=>"1 / 19", :credits=>"0.75"}
+# test_data = {:status=>"Open", :name=>"CIS*2750*0101 (6778) Software System Dvlmt & Intgrn", 
+#     :timeslots=>"2020/01/06-2020/04/20 LEC Mon, Wed 05:30PM - 06:50PM, ROZH, Room 102\n2020/01/06-2020/04/20 LAB Wed 08:30AM - 10:20AM, THRN, Room 2418", 
+#     :prof=>"D. Nikitenko", :capacity=>"1 / 19", :credits=>"0.75"}
 
 class CourseInfo
+    def initialize
+        @name = ''
+        @code = ''
+        @prof = ''
+        @credits = ''
+    end
+
     attr_accessor :name
     attr_accessor :code
     attr_accessor :prof
     attr_accessor :credits
+
+    def to_str
+        to_s
+    end
+
+    def to_s
+        "Name: #{@name}\nCode: #{@code}\nProf: #{@prof}\nCredits: #{@credits}"
+    end
+end
+
+class CourseSection
+    def initialize
+        @code = ''
+        @is_open = false
+        @capacity = ''
+        @course_info = nil
+        @timeslots = []
+    end
+    
+    attr_accessor :code
+    attr_accessor :is_open
+    attr_accessor :capacity
+    attr_accessor :course_info
+    attr_accessor :timeslots
+
+    def to_str
+        to_s
+    end
+
+    def to_s
+        str = "Code: #{@code}\nIs Open: #{@is_open}\nCapacity: #{@capacity}\n#{course_info}"
+        timeslots.each_with_index { |timeslot, index| str += "\nTimeslot #{index+1}:\n#{timeslot}" }
+        return str
+    end
 end
 
 class TimeSlot
     def initialize
+        @type = ''
         @days = []
+        @start_time = nil
+        @end_time = nil
+        @location = ''
     end
 
     attr_accessor :type
@@ -28,59 +66,121 @@ class TimeSlot
     attr_accessor :start_time
     attr_accessor :end_time
     attr_accessor :location
+
+    def to_str
+        to_s
+    end
+
+    def to_s
+        "Type: #{@type}\nDays: #{@days.join(', ')}\n" \
+        "Time: #{@start_time.strftime("%I:%M%p")} - #{@end_time.strftime("%I:%M%p")}\nLocation: #{@location}"
+    end
 end
 
 class DataParser
-    def initialize(data)
-        @status = data[:status]
-        @prof = data[:prof]
-        @credits = data[:credits]
-
-        parse_capacity(data[:capacity])
-        parse_name(data[:name])
+    def initialize
+        @course_infos = Hash.new
+        @sections = []
     end
 
-    private:
-    def parse_capacity(capacity_str)
-        CAPACITY_REGEX = %r{(?<available>\d+)\W+(?<total>\d+)}
+    def parse(src_data)
+        section = create_section(src_data)
+        section.course_info = create_course_info(src_data)
+        section.timeslots = create_timeslots(src_data)
 
-        match = capacity_str.match(CAPACITY_REGEX)
-        raise 'Invalid capacity string' if match.nil?
-
-        return match[:available]
+        @sections << section
     end
 
-    def parse_name(name_str)
-        tokens = name.split(' ')
-        code_tokens = token[0].split('*')
+    attr_reader :sections
+
+    private
+    def match_all(str, regex)
+        str.to_enum(:scan, regex).map { Regexp.last_match }
+    end
+
+    def parse_capicity_string(capacity_str)
+        regex = /
+            (?<available>\d+)\W+(?<total>\d+)
+        /x
+
+        matches = match_all(capacity_str, regex)
+        raise 'Invalid capacity string' if matches.nil?
+
+        return matches[0]
+    end
+
+    def parse_name_string(name_str)
+        regex = /
+            (?<course_code>[A-Z]{3,4}\*\d{4})\*
+            (?<section_code>\d{4})\W+\w*\W+
+            (?<name>.*)
+        /x
         
-        @course_code = code_tokens[0] + '*' + code_tokens[1]
-        @section_code = code_tokens[2]
+        matches = match_all(name_str, regex)
+        raise 'Invalid name string' if matches.nil?
+
+        return matches[0]
     end
 
-    def parse_timeslots(timeslots_str)
-        #2020/01/06-2020/04/20 LEC Mon, Wed 05:30PM - 06:50PM, ROZH, Room 102
-        TIMESLOT_REGEX = %r{
+    def parse_timeslots_string(timeslots_str)
+        # Example string: 2020/01/06-2020/04/20 LEC Mon, Wed 05:30PM - 06:50PM, ROZH, Room 102
+        regex = /
             (?<type>LEC|LAB)
-            (?<days>(\W+(Mon|Tues|Wed|Thurs|Fri))+)
-            (?<times>(\W+\d{2}:\d{2}(AM|PM)){2})\W+
+            (?<days>(\W+(Mon|Tues|Wed|Thurs|Fri))+)\W+
+            (?<times>(\d{2}:\d{2}(AM|PM)(\W*-\W*)?){2})\W+
             (?<building>[A-Z]{4})\W+Room\W+
             (?<room>\d+)
-        }
+        /x
 
-        matches = timeslots_str.match(TIMESLOT_REGEX)
+        matches = match_all(timeslots_str, regex)
         raise 'Invalid timeslots string' if matches.nil?
+
+        return matches
+    end
+
+    def create_section(src_data)
+        section = CourseSection.new
+
+        section.code = parse_name_string(src_data[:name])[:section_code]
+        section.is_open = (src_data[:status] == "Open")
+        section.capacity = parse_capicity_string(src_data[:capacity])[:available]
+
+        return section
+    end
+
+    def create_course_info(src_data)
+        match = parse_name_string(src_data[:name])
+
+        # check if this course already exists, and return it if it does
+        course_code = match[:course_code]
+        course_info = @course_infos[course_code]
+        return course_info unless course_info.nil?
+
+        # create a new course info using the data
+        course_info = CourseInfo.new
+        course_info.code = course_code
+        course_info.name = match[:name]
+        course_info.prof = src_data[:prof]
+        course_info.credits = src_data[:credits]
+
+        # add the new course info to the hash
+        @course_infos[course_code] = course_info
+        return course_info
+    end
+
+    def create_timeslots(src_data)
+        matches = parse_timeslots_string(src_data[:timeslots])
 
         # create the timeslots from the matches
         timeslots = []
         matches.each do |match|
             timeslot = TimeSlot.new
             timeslot.type = match[:type]
-            match[:days].strip.split(", ") { |day| timeslot.days << day }
+            match[:days].strip.split(/\W+/).each { |day| timeslot.days << day }
 
-            times = match[:times].strip.split(" - ")
-            timeslot.start_time = times[0]
-            timeslot.end_time = times[1]
+            times = match[:times].strip.split(/\W*-\W*/)
+            timeslot.start_time = Time.parse(times[0])
+            timeslot.end_time = Time.parse(times[1])
             
             timeslot.location = "#{match[:building]} #{match[:room]}"
 
@@ -90,5 +190,3 @@ class DataParser
         return timeslots
     end
 end
-
-#(LEC|LAB)\W+(Mon|Tues|Wed|Thurs|Fri)\W+(\d{2}:\d{2}AM|\d{2}:\d{2}PM)\W+(?<building>[A-Z]{4}), Room (?<room>\d+)

@@ -1,6 +1,7 @@
 require 'watir'
 require 'webdrivers'
 require 'nokogiri'
+require './data_parser'
 
 search_fields = {
     term: 'W20',
@@ -28,7 +29,7 @@ doc = Nokogiri::HTML(browser.html)
 # close the browser now we are done with it
 browser.close
 
-@sections = []
+data_parser = DataParser.new
 
 # locate the results table and parse its data
 table = doc.search('table')[2]
@@ -36,30 +37,34 @@ table.search('tr').each do |tr|
     cells = tr.search('td')
     next if cells.length == 0
 
-    section = {}
+    section_data = {}
     cells.each do |cell|
         el = cell.at('input')
         unless el.nil?
             data = el.values[2]
             case el.values[1]
             when /LIST.VAR1_/
-                section[:status] = data
+                section_data[:status] = data
             when /SEC.MEETING.INFO_/
-                section[:timeslots] = data
+                section_data[:timeslots] = data
             when /SEC.FACULTY.INFO_/
-                section[:prof] = data
+                section_data[:prof] = data
             when /LIST.VAR5_/
-                section[:capacity] = data
+                section_data[:capacity] = data
             when /SEC.MIN.CRED_/
-                section[:credits] = data
+                section_data[:credits] = data
             end
         else
             el = cell.at('a')
             if !el.nil?
-                section[:name] = el.text
+                section_data[:name] = el.text
             end
         end
     end
 
-    @sections << section
+    data_parser.parse(section_data)
+end
+
+data_parser.sections.each_with_index do |section, index|
+    puts "\nSection #{index+1}:\n#{section}\n"
 end
