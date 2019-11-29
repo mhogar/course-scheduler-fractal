@@ -83,20 +83,20 @@ class DataParser
         @sections = []
     end
 
-    def parse(src_data)
-        section = create_section(src_data)
-        section.course_info = create_course_info(src_data)
-        section.timeslots = create_timeslots(src_data)
+    def parse(sections_data)
+        # convert to array if it is not already
+        sections_data = [sections_data] unless sections_data.kind_of?(Array)
 
-        @sections << section
+        sections_data.each do |section_data|
+            section = create_section(section_data)
+            section.course_info = create_course_info(section_data)
+            section.timeslots = create_timeslots(section_data)
+
+            @sections << section
+        end
     end
 
     attr_reader :sections
-
-    private
-    def match_all(str, regex)
-        str.to_enum(:scan, regex).map { Regexp.last_match }
-    end
 
     def parse_capicity_string(capacity_str)
         regex = /
@@ -104,7 +104,7 @@ class DataParser
         /x
 
         matches = match_all(capacity_str, regex)
-        raise 'Invalid capacity string' if matches.nil?
+        raise 'Invalid capacity string' if matches.empty?
 
         return matches[0]
     end
@@ -117,7 +117,7 @@ class DataParser
         /x
         
         matches = match_all(name_str, regex)
-        raise 'Invalid name string' if matches.nil?
+        raise 'Invalid name string' if matches.empty?
 
         return matches[0]
     end
@@ -133,9 +133,14 @@ class DataParser
         /x
 
         matches = match_all(timeslots_str, regex)
-        raise 'Invalid timeslots string' if matches.nil?
+        raise 'Invalid timeslots string' if matches.empty?
 
         return matches
+    end
+
+    private
+    def match_all(str, regex)
+        str.to_enum(:scan, regex).map { Regexp.last_match }
     end
 
     def create_section(src_data)
