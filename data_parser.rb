@@ -112,7 +112,7 @@ class DataParser
     def parse_name_string(name_str)
         regex = /
             (?<course_code>[A-Z]{3,4}\*\d{4})\*
-            (?<section_code>\d{4})\W+\w*\W+
+            (?<section_code>\d{4})(\W+\w*\W+|\W+)
             (?<name>.*)
         /x
         
@@ -123,7 +123,6 @@ class DataParser
     end
 
     def parse_timeslots_string(timeslots_str)
-        # Example string: 2020/01/06-2020/04/20 LEC Mon, Wed 05:30PM - 06:50PM, ROZH, Room 102
         regex = /
             (?<type>LEC|LAB)
             (?<days>(\W+(Mon|Tues|Wed|Thurs|Fri))+)\W+

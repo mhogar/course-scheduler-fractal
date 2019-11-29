@@ -1,0 +1,11 @@
+language: ruby
+os: linux
+
+#cache:
+#  bundler: true
+
+jobs:
+  include:
+    - stage: Unit Tests
+      script:
+        - ruby data_parser_test.rb
