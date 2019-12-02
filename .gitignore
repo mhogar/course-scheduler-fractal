@@ -1,3 +1,10 @@
+# ruby files
 .bundle/
 vendor/
 .vscode/
+
+# c++ files
+scheduler/obj/*
+!scheduler/obj/.keep
+scheduler/bin/*
+!scheduler/bin/.keep
