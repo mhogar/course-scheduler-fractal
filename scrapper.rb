@@ -10,6 +10,8 @@ class Scrapper
 
     private
     def get_search_results_page(search_fields)
+        raise 'Too many search rows' if search_fields[:rows].length > 5
+
         browser = Watir::Browser.new :chrome, headless: true
         browser.window.resize_to 1024, 768 # set the size to fix issues when running in headless mode
 
@@ -20,8 +22,11 @@ class Scrapper
 
         # fill in the search form
         browser.select_list(id: 'VAR1').select(search_fields[:term])
-        browser.select_list(id: 'LIST_VAR1_1').select(search_fields[:subject])
-        browser.text_field(id: 'LIST_VAR3_1').set(search_fields[:course_code])
+        search_fields[:rows].each_with_index do |row, index|
+            browser.select_list(id: "LIST_VAR1_#{index+1}").select(row[:subject]) unless row[:subject].nil?
+            browser.text_field(id: "LIST_VAR3_#{index+1}").set(row[:course_code]) unless row[:course_code].nil?
+            browser.text_field(id: "LIST_VAR4_#{index+1}").set(row[:section]) unless row[:section].nil?
+        end
         browser.input(name: 'SUBMIT2').click
 
         # extract the html from the search results page

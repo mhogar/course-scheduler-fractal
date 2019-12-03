@@ -8,3 +8,8 @@ scheduler/obj/*
 !scheduler/obj/.keep
 scheduler/bin/*
 !scheduler/bin/.keep
+
+public/*
+!pubic/.keep
+
+scheduler/rapidjson/*

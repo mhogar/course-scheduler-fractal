@@ -1,78 +1,80 @@
-class Course
-    def initialize
-        @name = ''
-        @code = ''
-        @prof = ''
-        @credits = ''
-        @sections = []
-    end
-
-    attr_accessor :name
-    attr_accessor :code
-    attr_accessor :prof
-    attr_accessor :credits
-    attr_accessor :sections
-
-    def to_str
-        to_s
-    end
-
-    def to_s
-        str = "Name: #{@name}\nCode: #{@code}\nProf: #{@prof}\nCredits: #{@credits}"
-        sections.each_with_index { |section, index| str += "\n\nSection #{index+1}:\n#{section}" }
-        return str;
-    end
-end
-
-class CourseSection
-    def initialize
-        @code = ''
-        @is_open = false
-        @capacity = ''
-        @timeslots = []
-    end
-    
-    attr_accessor :code
-    attr_accessor :is_open
-    attr_accessor :capacity
-    attr_accessor :timeslots
-
-    def to_str
-        to_s
-    end
-
-    def to_s
-        str = "Code: #{@code}\nIs Open: #{@is_open}\nCapacity: #{@capacity}\nTimeslots:"
-        timeslots.each { |timeslot| str += "\n#{timeslot}" }
-        return str
-    end
-end
-
-class TimeSlot
-    def initialize
-        @type = ''
-        @days = []
-        @start_time = ''
-        @end_time = ''
-        @location = ''
-    end
-
-    attr_accessor :type
-    attr_accessor :days
-    attr_accessor :start_time
-    attr_accessor :end_time
-    attr_accessor :location
-
-    def to_str
-        to_s
-    end
-
-    def to_s
-        "Type: #{@type}\nDays: #{@days.join(', ')}\nTime: #{@start_time} - #{@end_time}\nLocation: #{@location}"
-    end
-end
+require 'json'
 
 class DataParser
+    class Course
+        def initialize
+            @name = ''
+            @code = ''
+            @prof = ''
+            @credits = ''
+            @sections = []
+        end
+    
+        attr_accessor :name
+        attr_accessor :code
+        attr_accessor :prof
+        attr_accessor :credits
+        attr_accessor :sections
+    
+        def to_str
+            to_s
+        end
+    
+        def to_s
+            str = "Name: #{@name}\nCode: #{@code}\nProf: #{@prof}\nCredits: #{@credits}"
+            sections.each_with_index { |section, index| str += "\n\nSection #{index+1}:\n#{section}" }
+            return str
+        end
+    end
+    
+    class CourseSection
+        def initialize
+            @code = ''
+            @is_open = false
+            @capacity = ''
+            @timeslots = []
+        end
+        
+        attr_accessor :code
+        attr_accessor :is_open
+        attr_accessor :capacity
+        attr_accessor :timeslots
+    
+        def to_str
+            to_s
+        end
+    
+        def to_s
+            str = "Code: #{@code}\nIs Open: #{@is_open}\nCapacity: #{@capacity}\nTimeslots:"
+            timeslots.each { |timeslot| str += "\n#{timeslot}" }
+            return str
+        end
+    end
+    
+    class TimeSlot
+        def initialize
+            @type = ''
+            @days = []
+            @start_time = ''
+            @end_time = ''
+            @location = ''
+        end
+    
+        attr_accessor :type
+        attr_accessor :days
+        attr_accessor :start_time
+        attr_accessor :end_time
+        attr_accessor :location
+    
+        def to_str
+            to_s
+        end
+    
+        def to_s
+            "Type: #{@type}\nDays: #{@days.join(', ')}\nTime: #{@start_time} - #{@end_time}\nLocation: #{@location}"
+        end
+    end
+
     def initialize
         @courses = Hash.new
     end
@@ -128,6 +130,12 @@ class DataParser
     end
 
     private
+    def self.obj_to_hash(obj)
+        hash = {}
+        obj.instance_variables.each {|var| hash[var.to_s.delete("@")] = obj.instance_variable_get(var) }
+        return hash
+    end
+
     def match_all(str, regex)
         str.to_enum(:scan, regex).map { Regexp.last_match }
     end
