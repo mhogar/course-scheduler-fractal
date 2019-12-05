@@ -1,4 +1,4 @@
 namespace Scheduler
 {
-    void PrintString(const char* string);
+    void CreateSchedules(const char* filename, bool ignoreClosed);
 }

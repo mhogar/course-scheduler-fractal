@@ -1,6 +1,7 @@
 #include "Scheduler.h"
+#include <iostream>
 
 int main()
 {
-    Scheduler::PrintString("Hello World!");
+    Scheduler::CreateSchedules("../public/data.json", true);
 }

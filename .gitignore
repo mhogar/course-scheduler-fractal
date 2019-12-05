@@ -13,3 +13,4 @@ public/*
 !pubic/.keep
 
 scheduler/rapidjson/*
+!scheduler/rapidjson/.keep
