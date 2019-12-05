@@ -12,5 +12,9 @@ scheduler/bin/*
 public/*
 !pubic/.keep
 
-scheduler/rapidjson/*
-!scheduler/rapidjson/.keep
+# c++ dependencies
+scheduler/include/rapidjson/*
+!scheduler/include/rapidjson/.keep
+
+scheduler/include/catch2/*
+!scheduler/include/catch2/.keep

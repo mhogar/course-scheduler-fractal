@@ -1,5 +1,4 @@
 #include "Scheduler.h"
-#include <iostream>
 
 int main()
 {

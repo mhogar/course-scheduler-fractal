@@ -1,24 +1,45 @@
 CC = g++
 FLAGS = -Wall -std=c++17
-TEST_OBJS = obj/test.o
+INCLUDE = -Iinclude
 LIB_OBJS = obj/scheduler.o obj/dataParser.o
-DLL = bin/scheduler.so
-PROGRAM = bin/test
+MAIN_OBJS = obj/main.o
+TEST_OBJ = obj/testsMain.o
+SO = bin/scheduler.so
+MAIN_PROGRAM = bin/main
+TEST_PROGRAMS = bin/dataParserTests
 
-program: Lib $(TEST_OBJS)
-	$(CC) $(TEST_OBJS) $(DLL) -o $(PROGRAM)
+all: main tests
 
-Lib: $(LIB_OBJS)
-	$(CC) -shared -o $(DLL) $(LIB_OBJS)
+lib: $(LIB_OBJS)
+	$(CC) -shared -o $(SO) $(LIB_OBJS)
 
-obj/test.o: test.cpp
-	$(CC) $(FLAGS) -c test.cpp -o obj/test.o
+main: lib $(MAIN_OBJS)
+	$(CC) $(MAIN_OBJS) $(SO) -o $(MAIN_PROGRAM)
 
-obj/scheduler.o: Scheduler.cpp
-	$(CC) $(FLAGS) -c Scheduler.cpp -o obj/scheduler.o
+test: $(TEST_PROGRAMS)
 
-obj/dataParser.o: DataParser.cpp
-	$(CC) $(FLAGS) -c DataParser.cpp -o obj/dataParser.o
+obj/scheduler.o: src/Scheduler.cpp
+	$(CC) $(FLAGS) $(INCLUDE) -c src/Scheduler.cpp -o obj/scheduler.o
 
-clean:
-	rm $(TEST_OBJS) $(LIB_OBJS) $(DLL) $(PROGRAM)
+obj/dataParser.o: src/DataParser.cpp
+	$(CC) $(FLAGS) $(INCLUDE) -c src/DataParser.cpp -o obj/dataParser.o
+
+obj/main.o: src/main.cpp
+	$(CC) $(FLAGS) $(INCLUDE) -c src/main.cpp -o obj/main.o
+
+$(TEST_OBJ): tests/testsMain.cpp
+	$(CC) $(FLAGS) $(INCLUDE) -c tests/testsMain.cpp -o $(TEST_OBJ)
+
+bin/dataParserTests: lib $(TEST_OBJ) tests/DataParserTests.cpp
+	$(CC) $(FLAGS) $(INCLUDE) $(TEST_OBJ) tests/DataParserTests.cpp $(SO) -o bin/dataParserTests
+
+clean: clean_lib clean_main clean_tests
+
+clean_lib:
+	rm $(LIB_OBJS) $(SO)
+
+clean_main:
+	rm $(MAIN_OBJS) $(MAIN_PROGRAM)
+
+clean_tests:
+	rm $(TEST_OBJ) $(TEST_PROGRAMS)
