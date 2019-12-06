@@ -13,7 +13,6 @@ jobs:
     - stage: Unit Tests
       language: cpp
       install:
-        - ./scheduler/install_dependencies.sh 
-        - cd scheduler && make test
+        - cd scheduler && sh install_dependencies.sh && make test
       script:
-        - ./scheduler/bin/schedulerTests
+        - scheduler/bin/schedulerTests
