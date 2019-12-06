@@ -1,13 +1,36 @@
 #include "Scheduler.h"
-#include "DataParser.h"
-#include <iostream>
 
-void Scheduler::CreateSchedules(const char* filename, bool ignoreClosed)
+Scheduler::Scheduler()
 {
-    DataParser dataParser;
-    std::vector<DataParser::Course> courses = dataParser.Parse(filename, ignoreClosed);
+}
 
-    std::cout << "Num Courses: " << courses.size() << std::endl;
-    std::cout << "Num Sections: " << courses[0].Sections.size() << std::endl;
-    std::cout << "Num Timeslots: " << courses[0].Sections[0].Timeslots.size() << std::endl;
+Scheduler::~Scheduler()
+{
+}
+
+bool Scheduler::Timeslot::HasConflict(const Scheduler::Timeslot& other) const
+{
+    //first check days
+    if ((this->Days & other.Days) == 0) {
+        return false;
+    }
+
+    //TODO: check times
+    return false;
+}
+
+bool Scheduler::Section::HasConflict(const Scheduler::Section& other) const
+{
+    //check all this sectionElement's timeslots against all of the other sectionElement's timeslots for conflicts
+    for (const Timeslot& timeslot1 : this->Timeslots)
+    {
+        for (const Timeslot& timeslot2 : other.Timeslots)
+        {
+            if (timeslot1.HasConflict(timeslot2)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

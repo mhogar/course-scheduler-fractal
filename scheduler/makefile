@@ -1,7 +1,7 @@
 CC = g++
 FLAGS = -Wall -std=c++17
 INCLUDE = -Iinclude
-LIB_OBJS = obj/scheduler.o obj/dataParser.o
+LIB_OBJS = obj/schedulerInterface.o obj/scheduler.o obj/dataParser.o
 MAIN_OBJS = obj/main.o
 TEST_OBJ = obj/testsMain.o
 SO = bin/scheduler.so
@@ -17,6 +17,9 @@ main: lib $(MAIN_OBJS)
 	$(CC) $(MAIN_OBJS) $(SO) -o $(MAIN_PROGRAM)
 
 test: $(TEST_PROGRAMS)
+
+obj/schedulerInterface.o: src/SchedulerInterface.cpp
+	$(CC) $(FLAGS) $(INCLUDE) -c src/SchedulerInterface.cpp -o obj/schedulerInterface.o
 
 obj/scheduler.o: src/Scheduler.cpp
 	$(CC) $(FLAGS) $(INCLUDE) -c src/Scheduler.cpp -o obj/scheduler.o

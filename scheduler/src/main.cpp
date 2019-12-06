@@ -1,6 +1,6 @@
-#include "Scheduler.h"
+#include "SchedulerInterface.h"
 
 int main()
 {
-    Scheduler::CreateSchedules("../public/data.json", true);
+    SchedulerInterface::CreateSchedules("../public/data.json", true);
 }

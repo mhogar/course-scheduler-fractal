@@ -3,5 +3,8 @@
 
 TEST_CASE("Invalid JSON's throw exceptions")
 {
-    REQUIRE(1 == 1);
+}
+
+TEST_CASE("Valid JSON produces correct objects")
+{
 }
