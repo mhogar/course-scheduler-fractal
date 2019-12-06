@@ -12,6 +12,6 @@ jobs:
         - ruby data_parser_test.rb
     - stage: Unit Tests
       install:
-        - cd scheduler && ./install_dependencies && make test
+        - cd scheduler && ./install_dependencies.sh && make test
       script:
         - scheduler/bin/schedulerTests
