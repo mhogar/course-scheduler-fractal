@@ -12,7 +12,10 @@ jobs:
         - ruby data_parser_test.rb
     - stage: Unit Tests
       language: cpp
+      before_install:
+        - cd scheduler
       install:
-        - cd scheduler && sh install_dependencies.sh && make test
+        - sh install_dependencies.sh
+        - make test
       script:
-        - scheduler/bin/schedulerTests
+        - bin/schedulerTests
