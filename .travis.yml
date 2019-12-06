@@ -7,5 +7,11 @@ os: linux
 jobs:
   include:
     - stage: Unit Tests
+      install: skip
       script:
         - ruby data_parser_test.rb
+    - stage: Unit Tests
+      install:
+        - cd scheduler && ./install_dependencies && make test
+      script:
+        - scheduler/bin/schedulerTests
