@@ -6,7 +6,7 @@ MAIN_OBJS = obj/main.o
 TEST_OBJ = obj/testsMain.o
 SO = bin/scheduler.so
 MAIN_PROGRAM = bin/main
-TEST_PROGRAMS = bin/dataParserTests
+TEST_PROGRAMS = bin/dataParserTests bin/schedulerTests
 
 all: main tests
 
@@ -36,7 +36,10 @@ $(TEST_OBJ): tests/testsMain.cpp
 bin/dataParserTests: lib $(TEST_OBJ) tests/DataParserTests.cpp
 	$(CC) $(FLAGS) $(INCLUDE) $(TEST_OBJ) tests/DataParserTests.cpp $(SO) -o bin/dataParserTests
 
-clean: clean_lib clean_main clean_tests
+bin/schedulerTests: lib $(TEST_OBJ) tests/SchedulerTests.cpp
+	$(CC) $(FLAGS) $(INCLUDE) $(TEST_OBJ) tests/SchedulerTests.cpp $(SO) -o bin/schedulerTests
+
+clean: clean_lib clean_main clean_test
 
 clean_lib:
 	rm $(LIB_OBJS) $(SO)
@@ -44,5 +47,5 @@ clean_lib:
 clean_main:
 	rm $(MAIN_OBJS) $(MAIN_PROGRAM)
 
-clean_tests:
+clean_test:
 	rm $(TEST_OBJ) $(TEST_PROGRAMS)

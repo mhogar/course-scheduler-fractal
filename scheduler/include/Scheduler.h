@@ -26,6 +26,15 @@ public:
 
     struct Timeslot
     {
+        enum DayEnum
+        {
+            MON = 0x1,
+            TUES = 0x2,
+            WED = 0x4,
+            THUR = 0x8,
+            FRI = 0x10
+        };
+
         size_t Id;
         Section* Parent;
         uint16_t StartTime = 0;

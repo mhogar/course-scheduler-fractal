@@ -15,7 +15,11 @@ bool Scheduler::Timeslot::HasConflict(const Scheduler::Timeslot& other) const
         return false;
     }
 
-    //TODO: check times
+    //check times for overlap
+    if (this->StartTime < other.EndTime && this->EndTime > other.StartTime) {
+        return true;
+    }
+
     return false;
 }
 

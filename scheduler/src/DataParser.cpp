@@ -131,19 +131,19 @@ std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool igno
                     auto day = std::string(dayElement.GetString());
 
                     if (day == "Mon") {
-                        days |= 0x1;
+                        days |= Scheduler::Timeslot::DayEnum::MON;
                     }
                     else if (day == "Tues") {
-                        days |= 0x2;
+                        days |= Scheduler::Timeslot::DayEnum::TUES;
                     }
                     else if (day == "Wed") {
-                        days |= 0x4;
+                        days |= Scheduler::Timeslot::DayEnum::WED;
                     }
                     else if (day == "Thur") {
-                        days |= 0x8;
+                        days |= Scheduler::Timeslot::DayEnum::THUR;
                     }
                     else if (day == "Fri") {
-                        days |= 0x10;
+                        days |= Scheduler::Timeslot::DayEnum::FRI;
                     }
                     else {
                         throw ParseException(CreateParseErrorMessage(timeslot, "Invalid day string."));
