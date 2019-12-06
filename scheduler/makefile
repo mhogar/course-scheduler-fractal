@@ -19,13 +19,13 @@ main: lib $(MAIN_OBJS)
 test: $(TEST_PROGRAMS)
 
 obj/schedulerInterface.o: src/SchedulerInterface.cpp
-	$(CC) $(FLAGS) $(INCLUDE) -c src/SchedulerInterface.cpp -o obj/schedulerInterface.o
+	$(CC) $(FLAGS) -fpic $(INCLUDE) -c src/SchedulerInterface.cpp -o obj/schedulerInterface.o
 
 obj/scheduler.o: src/Scheduler.cpp
-	$(CC) $(FLAGS) $(INCLUDE) -c src/Scheduler.cpp -o obj/scheduler.o
+	$(CC) $(FLAGS) -fpic $(INCLUDE) -c src/Scheduler.cpp -o obj/scheduler.o
 
 obj/dataParser.o: src/DataParser.cpp
-	$(CC) $(FLAGS) $(INCLUDE) -c src/DataParser.cpp -o obj/dataParser.o
+	$(CC) $(FLAGS) -fpic $(INCLUDE) -c src/DataParser.cpp -o obj/dataParser.o
 
 obj/main.o: src/main.cpp
 	$(CC) $(FLAGS) $(INCLUDE) -c src/main.cpp -o obj/main.o
