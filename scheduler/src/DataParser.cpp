@@ -106,22 +106,22 @@ std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool igno
                 timeslot.Id = timeslots.size() - 1;
                 timeslot.Parent = &section;
 
-                Validate(timeslotElement.IsObject(), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot is not an object."));
+                Validate(timeslotElement.IsObject(), CreateParseErrorMessage(timeslot, "Timeslot is not an object."));
                 auto timeslotObj = timeslotElement.GetObject();
 
                 //get start time
-                Validate(timeslotObj.HasMember("startTime"), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot does not have member 'startTime'."));
-                Validate(timeslotObj["startTime"].IsString(), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot.startTime is not a string."));
+                Validate(timeslotObj.HasMember("startTime"), CreateParseErrorMessage(timeslot, "Timeslot does not have member 'startTime'."));
+                Validate(timeslotObj["startTime"].IsString(), CreateParseErrorMessage(timeslot, "Timeslot.startTime is not a string."));
                 timeslot.StartTime = ParseTime(timeslotObj["startTime"].GetString());
 
                 //get end time
-                Validate(timeslotObj.HasMember("endTime"), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot does not have member 'endTime'."));
-                Validate(timeslotObj["endTime"].IsString(), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot.endTime is not a string."));
+                Validate(timeslotObj.HasMember("endTime"), CreateParseErrorMessage(timeslot, "Timeslot does not have member 'endTime'."));
+                Validate(timeslotObj["endTime"].IsString(), CreateParseErrorMessage(timeslot, "Timeslot.endTime is not a string."));
                 timeslot.EndTime = ParseTime(timeslotObj["endTime"].GetString());
 
                 //get days
-                Validate(timeslotObj.HasMember("days"), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot does not have member 'days'."));
-                Validate(timeslotObj["days"].IsArray(), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot.days is not an array."));
+                Validate(timeslotObj.HasMember("days"), CreateParseErrorMessage(timeslot, "Timeslot does not have member 'days'."));
+                Validate(timeslotObj["days"].IsArray(), CreateParseErrorMessage(timeslot, "Timeslot.days is not an array."));
                 auto daysArray = timeslotObj["days"].GetArray();
 
                 uint8_t& days = timeslot.Days;

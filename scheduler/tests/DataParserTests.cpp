@@ -37,6 +37,51 @@ TEST_CASE("Invalid JSON's throw exceptions")
     {
         checkThrowsParseException("tests/testData/test3.json", "Course 0: Section 0: Section is not an array.");
     }
+
+    SECTION("Timeslot that is not an array throws exception")
+    {
+        checkThrowsParseException("tests/testData/test4.json", "Course 0: Section 0: Timeslot 0: Timeslot is not an object.");
+    }
+
+    SECTION("Timeslot that does not have member 'startTime' throws exception")
+    {
+        checkThrowsParseException("tests/testData/test5.json", "Course 0: Section 0: Timeslot 0: Timeslot does not have member 'startTime'.");
+    }
+
+    SECTION("Timeslot whose has member 'startTime' that is not a string throws exception")
+    {
+        checkThrowsParseException("tests/testData/test6.json", "Course 0: Section 0: Timeslot 0: Timeslot.startTime is not a string.");
+    }
+
+    SECTION("Timeslot that does not have member 'endTime' throws exception")
+    {
+        checkThrowsParseException("tests/testData/test7.json", "Course 0: Section 0: Timeslot 0: Timeslot does not have member 'endTime'.");
+    }
+
+    SECTION("Timeslot whose has member 'endTime' that is not a string throws exception")
+    {
+        checkThrowsParseException("tests/testData/test8.json", "Course 0: Section 0: Timeslot 0: Timeslot.endTime is not a string.");
+    }
+
+    SECTION("Timeslot that does not have member 'days' throws exception")
+    {
+        checkThrowsParseException("tests/testData/test9.json", "Course 0: Section 0: Timeslot 0: Timeslot does not have member 'days'.");
+    }
+
+    SECTION("Timeslot whose has member 'days' that is not an array throws exception")
+    {
+        checkThrowsParseException("tests/testData/test10.json", "Course 0: Section 0: Timeslot 0: Timeslot.days is not an array.");
+    }
+
+    SECTION("Timeslot whose has member 'days' that is not an array throws exception")
+    {
+        checkThrowsParseException("tests/testData/test11.json", "Course 0: Section 0: Timeslot 0: Day is not a string.");
+    }
+
+    SECTION("Timeslot whose has member 'days' that is not an array throws exception")
+    {
+        checkThrowsParseException("tests/testData/test12.json", "Course 0: Section 0: Timeslot 0: Invalid day string.");
+    }
 }
 
 // TEST_CASE("Valid JSON produces correct objects")
