@@ -5,8 +5,7 @@
 
 void SchedulerInterface::CreateSchedules(const char* filename, bool ignoreClosed)
 {
-    DataParser dataParser;
-    std::vector<Scheduler::Course> courses = dataParser.Parse(filename, ignoreClosed);
+    std::vector<Scheduler::Course> courses = DataParser::Instance()->Parse(filename, ignoreClosed);
 
     std::cout << "Num Courses: " << courses.size() << std::endl;
     std::cout << "Num Sections: " << courses[0].Sections.size() << std::endl;

@@ -29,6 +29,7 @@ public:
     {
         enum DayEnum
         {
+            NONE = 0,
             MON = 0x1,
             TUES = 0x2,
             WED = 0x4,

@@ -6,6 +6,17 @@
 
 using namespace rapidjson;
 
+DataParser* DataParser::mInstance = nullptr;
+
+DataParser* DataParser::Instance()
+{
+    if (mInstance == nullptr) {
+        mInstance = new DataParser();
+    }
+
+    return mInstance;
+}
+
 DataParser::DataParser()
 {
 }
@@ -14,16 +25,43 @@ DataParser::~DataParser()
 {
 }
 
+uint16_t DataParser::ParseTime(const char* timeStr)
+{
+    return 0;
+}
+
+Scheduler::Timeslot::DayEnum DataParser::ParseDay(const char* day)
+{
+    std::string dayStr = day;
+
+    if (dayStr == "Mon") {
+        return Scheduler::Timeslot::DayEnum::MON;
+    }
+
+    if (dayStr == "Tues") {
+        return Scheduler::Timeslot::DayEnum::TUES;
+    }
+
+    if (dayStr == "Wed") {
+        return Scheduler::Timeslot::DayEnum::WED;
+    }
+
+    if (dayStr == "Thur") {
+        return Scheduler::Timeslot::DayEnum::THUR;
+    }
+
+    if (dayStr == "Fri") {
+        return Scheduler::Timeslot::DayEnum::FRI;
+    }
+
+    return Scheduler::Timeslot::DayEnum::NONE;
+}
+
 void DataParser::Validate(bool result, std::string message)
 {
     if (!result) {
         throw DataParser::ParseException(message);
     }
-}
-
-uint16_t DataParser::ParseTime(const char* timeStr)
-{
-    return 0;
 }
 
 std::string DataParser::CreateParseErrorMessage(const Scheduler::Course& course, const char* message)
@@ -128,25 +166,13 @@ std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool igno
                 for (auto& dayElement : daysArray)
                 {
                     Validate(dayElement.IsString(), CreateParseErrorMessage(timeslot, "Day is not a string."));
-                    auto day = std::string(dayElement.GetString());
+                    auto day = ParseDay(dayElement.GetString());
 
-                    if (day == "Mon") {
-                        days |= Scheduler::Timeslot::DayEnum::MON;
-                    }
-                    else if (day == "Tues") {
-                        days |= Scheduler::Timeslot::DayEnum::TUES;
-                    }
-                    else if (day == "Wed") {
-                        days |= Scheduler::Timeslot::DayEnum::WED;
-                    }
-                    else if (day == "Thur") {
-                        days |= Scheduler::Timeslot::DayEnum::THUR;
-                    }
-                    else if (day == "Fri") {
-                        days |= Scheduler::Timeslot::DayEnum::FRI;
+                    if (day == Scheduler::Timeslot::DayEnum::NONE) { 
+                        throw ParseException(CreateParseErrorMessage(timeslot, "Invalid day string."));
                     }
                     else {
-                        throw ParseException(CreateParseErrorMessage(timeslot, "Invalid day string."));
+                        days |= day;
                     }
                 }
             }
