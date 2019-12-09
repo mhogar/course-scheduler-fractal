@@ -19,3 +19,4 @@ jobs:
         - make test
       script:
         - bin/schedulerTests
+        - bin/dataParserTests

@@ -28,17 +28,17 @@ uint16_t DataParser::ParseTime(const char* timeStr)
 
 std::string DataParser::CreateParseErrorMessage(const Scheduler::Course& course, const char* message)
 {
-    return "Scheduler::Course: " + std::to_string(course.Id) + ": " + message;
+    return "Course " + std::to_string(course.Id) + ": " + message;
 }
 
 std::string DataParser::CreateParseErrorMessage(const Scheduler::Section& section, const char* message)
 {
-    return CreateParseErrorMessage(*section.Parent) + "Scheduler::Section: " + std::to_string(section.Id) + ": " + message;
+    return CreateParseErrorMessage(*section.Parent) + "Section " + std::to_string(section.Id) + ": " + message;
 }
 
 std::string DataParser::CreateParseErrorMessage(const Scheduler::Timeslot& timeslot, const char* message)
 {
-    return CreateParseErrorMessage(*timeslot.Parent) + "Scheduler::Timeslot: " + std::to_string(timeslot.Id) + ": " + message;
+    return CreateParseErrorMessage(*timeslot.Parent) + "Timeslot " + std::to_string(timeslot.Id) + ": " + message;
 }
 
 std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool ignoreClosed)
@@ -70,9 +70,9 @@ std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool igno
         Scheduler::Course& course = courses.back();
 
         //init the course
-        course.Id = courses.size();
+        course.Id = courses.size() - 1;
 
-        Validate(courseElement.IsArray(), CreateParseErrorMessage(course, "Scheduler::Course is not an array."));
+        Validate(courseElement.IsArray(), CreateParseErrorMessage(course, "Course is not an array."));
         auto sectionsArray = courseElement.GetArray();
 
         //init the sections vector and set size
@@ -86,10 +86,10 @@ std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool igno
             Scheduler::Section& section = sections.back();
 
             //init the section
-            section.Id = sections.size();
+            section.Id = sections.size() - 1;
             section.Parent = &course;
             
-            Validate(sectionElement.IsArray(), CreateParseErrorMessage(section, "Scheduler::Section is not an array."));
+            Validate(sectionElement.IsArray(), CreateParseErrorMessage(section, "Section is not an array."));
             auto timeslotsArray = sectionElement.GetArray();
 
             //init timeslots vector and set size
@@ -103,7 +103,7 @@ std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool igno
                 Scheduler::Timeslot& timeslot = timeslots.back();
 
                 //init the timeslot
-                timeslot.Id = timeslots.size();
+                timeslot.Id = timeslots.size() - 1;
                 timeslot.Parent = &section;
 
                 Validate(timeslotElement.IsObject(), CreateParseErrorMessage(timeslot, "Scheduler::Timeslot is not an object."));
