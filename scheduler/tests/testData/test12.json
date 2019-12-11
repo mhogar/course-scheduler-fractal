@@ -2,8 +2,8 @@
     [
         [
             {
-                "startTime": "",
-                "endTime": "",
+                "startTime": 0,
+                "endTime": 0,
                 "days": [
                     "Invalid"
                 ]

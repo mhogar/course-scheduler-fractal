@@ -25,11 +25,6 @@ DataParser::~DataParser()
 {
 }
 
-uint16_t DataParser::ParseTime(const char* timeStr)
-{
-    return 0;
-}
-
 Scheduler::Timeslot::DayEnum DataParser::ParseDay(const char* day)
 {
     std::string dayStr = day;
@@ -149,13 +144,13 @@ std::vector<Scheduler::Course> DataParser::Parse(const char* filename, bool igno
 
                 //get start time
                 Validate(timeslotObj.HasMember("startTime"), CreateParseErrorMessage(timeslot, "Timeslot does not have member 'startTime'."));
-                Validate(timeslotObj["startTime"].IsString(), CreateParseErrorMessage(timeslot, "Timeslot.startTime is not a string."));
-                timeslot.StartTime = ParseTime(timeslotObj["startTime"].GetString());
+                Validate(timeslotObj["startTime"].IsInt(), CreateParseErrorMessage(timeslot, "Timeslot.startTime is not an integer."));
+                timeslot.StartTime = timeslotObj["startTime"].GetInt();
 
                 //get end time
                 Validate(timeslotObj.HasMember("endTime"), CreateParseErrorMessage(timeslot, "Timeslot does not have member 'endTime'."));
-                Validate(timeslotObj["endTime"].IsString(), CreateParseErrorMessage(timeslot, "Timeslot.endTime is not a string."));
-                timeslot.EndTime = ParseTime(timeslotObj["endTime"].GetString());
+                Validate(timeslotObj["endTime"].IsInt(), CreateParseErrorMessage(timeslot, "Timeslot.endTime is not an integer."));
+                timeslot.EndTime = timeslotObj["endTime"].GetInt();
 
                 //get days
                 Validate(timeslotObj.HasMember("days"), CreateParseErrorMessage(timeslot, "Timeslot does not have member 'days'."));

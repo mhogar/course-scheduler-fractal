@@ -18,7 +18,6 @@ public:
     static DataParser* Instance();
 
     std::vector<Scheduler::Course> Parse(const char* filename, bool ignoreClosed=false);
-    uint16_t ParseTime(const char* timeStr);
     Scheduler::Timeslot::DayEnum ParseDay(const char* dayStr);
 
 protected:
