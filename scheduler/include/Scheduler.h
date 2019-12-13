@@ -46,8 +46,26 @@ public:
         bool HasConflict(const Timeslot& other) const;
     };
 
+    struct Schedule
+    {
+        std::vector<const Section*> Sections;
+
+        bool DoesSectionFit(const Section& section) const;
+    };
+
     Scheduler();
     ~Scheduler();
+
+    std::vector<Schedule> CalculateSchedules(const std::vector<Course>& courses);
+
+private:
+    std::vector<Schedule> mSchedules;
+    Schedule* mCurrSchedule;
+
+    void CreateNewSchedule();
+
+    void CalculateSchedulesInternal(std::vector<Scheduler::Course>::const_iterator courseItr,
+        const std::vector<Scheduler::Course>::const_iterator endCourse);  
 };
 
 #endif
