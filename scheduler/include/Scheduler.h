@@ -56,7 +56,9 @@ public:
     Scheduler();
     ~Scheduler();
 
-    std::vector<Schedule> CalculateSchedules(const std::vector<Course>& courses);
+    void GenerateSchedules(const std::vector<Course>& courses);
+    std::vector<Schedule> GetSchedules() const;
+
 
 private:
     std::vector<Schedule> mSchedules;

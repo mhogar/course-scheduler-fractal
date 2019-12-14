@@ -5,9 +5,11 @@
 
 void SchedulerInterface::CreateSchedules(const char* filename, bool ignoreClosed)
 {
+    //parse the courses from the input json file
     std::vector<Scheduler::Course> courses = DataParser::Instance()->Parse(filename, ignoreClosed);
 
-    std::cout << "Num Courses: " << courses.size() << std::endl;
-    std::cout << "Num Sections: " << courses[0].Sections.size() << std::endl;
-    std::cout << "Num Timeslots: " << courses[0].Sections[0].Timeslots.size() << std::endl;
+    //create the schedules
+    Scheduler scheduler;
+    scheduler.GenerateSchedules(courses);
+    std::vector<Scheduler::Schedule> schedules = scheduler.GetSchedules();
 }

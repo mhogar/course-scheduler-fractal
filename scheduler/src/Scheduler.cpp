@@ -52,15 +52,13 @@ Scheduler::~Scheduler()
 {
 }
 
-std::vector<Scheduler::Schedule> Scheduler::CalculateSchedules(const std::vector<Scheduler::Course>& courses)
+void Scheduler::GenerateSchedules(const std::vector<Scheduler::Course>& courses)
 {
     //reset the schedules
     mSchedules.clear();
     CreateNewSchedule();
 
     CalculateSchedulesInternal(courses.begin(), courses.end());
-
-    return mSchedules;
 }
 
 void Scheduler::CreateNewSchedule()
@@ -100,4 +98,9 @@ void Scheduler::CalculateSchedulesInternal(std::vector<Scheduler::Course>::const
             mCurrSchedule->Sections.pop_back();
         }
     }
+}
+
+std::vector<Scheduler::Schedule> Scheduler::GetSchedules() const
+{
+    return mSchedules;
 }
