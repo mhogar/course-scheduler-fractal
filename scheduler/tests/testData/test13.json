@@ -1,0 +1,40 @@
+[
+    [
+        [
+            {
+                "startTime": 100,
+                "endTime": 200,
+                "days": [
+                    "Mon", "Wed", "Fri"
+                ]
+            },
+            {
+                "startTime": 300,
+                "endTime": 400,
+                "days": [
+                    "Thur"
+                ]
+            }
+        ],
+        [
+            {
+                "startTime": 500,
+                "endTime": 600,
+                "days": [
+                    "Mon"
+                ]
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "startTime": 700,
+                "endTime": 800,
+                "days": [
+                    "Tues"
+                ]
+            }
+        ]
+    ]
+]

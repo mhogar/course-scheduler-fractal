@@ -1,3 +1,20 @@
+# ruby files
 .bundle/
 vendor/
 .vscode/
+
+# c++ files
+scheduler/obj/*
+!scheduler/obj/.keep
+scheduler/bin/*
+!scheduler/bin/.keep
+
+public/*
+!pubic/.keep
+
+# c++ dependencies
+scheduler/include/rapidjson/*
+!scheduler/include/rapidjson/.keep
+
+scheduler/include/catch2/*
+!scheduler/include/catch2/.keep
